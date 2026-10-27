@@ -1,43 +1,10 @@
 ; Omega (.om) highlights. Word lists come from the reserved-word table in aien-dev/omega-mv
 ; seed/omc/omc.om (fn kw, fn kw2) and docs/one_layer/OMEGESE.md. When several patterns match one node,
-; the later pattern wins (tree-sitter CLI 0.27, Neovim), so the generic identifier capture comes first
-; and the word lists come last.
+; the later pattern wins (tree-sitter CLI 0.27, Neovim), so the generic identifier capture comes first,
+; then the word lists, then the names a declaration defines: an OM-1 unit may name a function `rotr` or
+; a global `out`, and the definition then wins over the word list.
 
 (identifier) @variable
-
-; ---- definitions ----
-(function_definition
-  name: (identifier) @function)
-
-(global_declaration
-  name: (identifier) @variable)
-
-(text_declaration
-  name: (identifier) @variable)
-
-(const_declaration
-  name: (identifier) @constant)
-
-(struct_declaration
-  name: (identifier) @type.definition)
-
-(layout_declaration
-  name: (identifier) @type.definition)
-
-(abstract_declaration
-  name: (identifier) @type.definition)
-
-(holds_declaration
-  name: (identifier) @type)
-
-(field_declaration
-  name: (identifier) @variable.member)
-
-(for_statement
-  counter: (identifier) @variable)
-
-(assignment
-  name: (identifier) @variable)
 
 ; The first word of a line that is not an assignment is a call (or an assignment written without `=`).
 (expression_statement
@@ -84,6 +51,40 @@
     "bind" "waitpid" "fstat" "recv" "send" "sleepns" "argcnt" "argread" "fclose" "fsync" "fchmod"
     "fseek" "socknew" "listen" "accept" "fork" "dupfd" "monons" "fopen" "unlink" "makedir"
     "peercred" "pollfds" "sendmsg"))
+
+; ---- definitions ----
+(function_definition
+  name: (identifier) @function)
+
+(global_declaration
+  name: (identifier) @variable)
+
+(text_declaration
+  name: (identifier) @variable)
+
+(const_declaration
+  name: (identifier) @constant)
+
+(struct_declaration
+  name: (identifier) @type.definition)
+
+(layout_declaration
+  name: (identifier) @type.definition)
+
+(abstract_declaration
+  name: (identifier) @type.definition)
+
+(holds_declaration
+  name: (identifier) @type)
+
+(field_declaration
+  name: (identifier) @variable.member)
+
+(for_statement
+  counter: (identifier) @variable)
+
+(assignment
+  name: (identifier) @variable)
 
 (comment) @comment
 

@@ -1,0 +1,9 @@
+note an OM-1 unit may define names that are OM-2 words; the definition wins over the word list
+global out uchar 8
+note   ^ variable
+fn rotr x ulong to ulong
+note ^ function
+at = ulong 1
+note <- variable
+ret rotr x
+end

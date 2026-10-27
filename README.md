@@ -22,8 +22,9 @@ bytes by a POSIX shell script whose `printf` is the one outside tool; the chain 
 Linux; matching the published omc hash is a fixed-output reproducibility check along one build path,
 not diverse double compilation, and it does not prove omc correct.)
 
-MEASURED at omega-mv `e5b32567a7aff3ce594e3254a622a846a6cd190b` (local run on a DGX Spark, 2026-10-27;
-the CI run on `ubuntu-24.04-arm` repeats it on every push):
+MEASURED at omega-mv `e5b32567a7aff3ce594e3254a622a846a6cd190b` (local run on a DGX Spark, 2026-10-27,
+and the same numbers in CI on `ubuntu-24.04-arm`:
+[run 40430760804](https://github.com/aien-dev/tree-sitter-omega/actions/runs/40430760804)):
 
 | files | count | parse with zero ERROR/MISSING nodes |
 |---|---:|---:|
@@ -81,13 +82,14 @@ word and, for calls, on the callee's signature, so a context-free grammar cannot
 honestly; I leave that to `omc`. Operator, type, contract and host words (`add`, `uint`, `requires`,
 `fopen`, ...) are ordinary identifiers in the tree and get their colour from
 [`queries/highlights.scm`](queries/highlights.scm), because OM-1 units may use OM-2 words such as `open`
-or `field` as names. A word the Omega lexer would reject, like `0xG1`, can still split into tokens here
+or `field` as names; a name a declaration defines (`fn rotr`, `global out`, `at = ...`) keeps the
+definition's colour. A word the Omega lexer would reject, like `0xG1`, can still split into tokens here
 without an ERROR node. This is a syntax tree for editors, not a checker; `omc` remains the authority.
 
 ## Tests and CI
 
 - `tree-sitter test` runs [`test/corpus/`](test/corpus) (14 cases, 4 of them must produce ERROR) and the
-  highlight assertions in [`test/highlight/`](test/highlight).
+  highlight assertions in [`test/highlight/`](test/highlight) (22 assertions in 2 files).
 - CI regenerates `src/` with the pinned CLI and fails if it differs from the committed parser.
 - Negative control 1: [`test/negative/malformed.om`](test/negative/malformed.om) must parse with ERROR.
 - Negative control 2: the coverage gate, given an oracle that accepts everything, must fail on that
@@ -99,6 +101,17 @@ The `tree-sitter.json` metadata, generated parser and bindings for C, Go, Node, 
 Swift are in this repository (from `tree-sitter init`). CI builds the parser through `tree-sitter
 test`; I have not yet published the bindings to npm, crates.io or PyPI, and I have not yet run them
 inside Neovim, Helix or Zed. For VS Code, use [aien-dev/vscode-omega](https://github.com/aien-dev/vscode-omega).
+
+## Editors and registries
+
+Where I checked each project's rule for taking a new grammar (2026-10-27), and where Omega stands:
+
+| project | rule | status |
+|---|---|---|
+| GitHub Linguist | [CONTRIBUTING: usage requirements](https://github.com/github-linguist/linguist/blob/main/CONTRIBUTING.md#language-extension-and-filename-usage-requirements): at least 2000 files per extension indexed in the last year, spread across many users; the language owner's own repos are filtered out | not met. GitHub code search on 2026-10-27: `extension:om "fn main to int"` gives 718 files, and `-org:aien-dev` gives 0. No PR until Omega is used widely outside my repos |
+| nvim-treesitter | [CONTRIBUTING: Parsers](https://github.com/nvim-treesitter/nvim-treesitter/blob/main/CONTRIBUTING.md#parsers): the filetype must be detected by Neovim nightly, the parser tested by users, CI via tree-sitter/workflows, queries checked by `ts_query_ls` | gated: Neovim does not detect `.om` as Omega yet, and the grammar has no outside users yet |
+| Helix | [Adding new languages](https://github.com/helix-editor/helix/blob/master/book/src/guides/adding_languages.md): a `languages.toml` entry, Helix-named queries in `runtime/queries/<name>/`, `cargo xtask docgen` | no written usage gate; not submitted, because I have not run the grammar inside Helix (Helix uses its own capture names) |
+| Zed | [Publishing prerequisites](https://zed.dev/docs/extensions/publishing/prerequisites): a Zed extension repo, tested manually in Zed at the submitted commit, then a PR to zed-industries/extensions | gated: needs a manual test in Zed, which I have not run |
 
 ## Foreign dependencies
 
