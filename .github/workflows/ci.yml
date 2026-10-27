@@ -1,0 +1,84 @@
+name: grammar
+# Regenerates the parser with the pinned tree-sitter CLI and checks it matches the committed src/,
+# runs the corpus and highlight tests, then measures parse coverage over every *.om file in
+# aien-dev/omega-mv at the commit in omega.ref, with omc born from the 408-byte seed as the oracle
+# for which files the real compiler accepts. Two negative controls must fail.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 6 * * 1'
+permissions:
+  contents: read
+jobs:
+  grammar:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install the pinned tree-sitter CLI and check its bytes
+        run: |
+          set -eu
+          npm ci --ignore-scripts
+          (cd node_modules/tree-sitter-cli && node install.js)
+          sha256sum -c tree-sitter-cli.sha256
+          npx --no-install tree-sitter --version
+      - name: tree-sitter generate (committed src/ must match)
+        run: |
+          set -eu
+          npx --no-install tree-sitter generate
+          git diff --exit-code -- src
+      - name: tree-sitter test
+        run: npx --no-install tree-sitter test
+      - name: Clone omega-mv at omega.ref and birth omc from the seed
+        run: |
+          set -eu
+          ref=$(awk '$1=="commit"{print $2}' omega.ref)
+          git clone --no-checkout https://github.com/aien-dev/omega-mv "$RUNNER_TEMP/omega-mv"
+          cd "$RUNNER_TEMP/omega-mv"
+          git checkout --detach "$ref"
+          git rev-parse HEAD
+          # Keep the corpus pristine: birth omc in a copy, so seed/out adds no files to the count.
+          git worktree add --detach "$RUNNER_TEMP/omega-build" "$ref"
+          cd "$RUNNER_TEMP/omega-build"
+          sh seed/omega-from-seed.sh > "$RUNNER_TEMP/seed.log" 2>&1 || { tail -40 "$RUNNER_TEMP/seed.log"; exit 1; }
+          sha256sum seed/out/omc
+      - name: Corpus coverage (every omc-accepted file must parse clean)
+        run: |
+          set -u
+          rc=0
+          sh scripts/coverage.sh "$RUNNER_TEMP/omega-mv" "$RUNNER_TEMP/omega-build/seed/out/omc" > coverage.tsv || rc=$?
+          grep '^COVERAGE' coverage.tsv
+          { echo '```'; grep '^COVERAGE' coverage.tsv; echo; grep 'parse=error' coverage.tsv; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          [ "$rc" = 0 ] || { echo "coverage.sh exited $rc"; grep 'omc=accept.*parse=error' coverage.tsv; exit 1; }
+      - name: Negative control 1, a malformed unit parses with ERROR (must FAIL to parse)
+        run: |
+          set -u
+          rc=0; npx --no-install tree-sitter parse -p . --quiet test/negative/malformed.om > neg1.txt 2>&1 || rc=$?
+          cat neg1.txt
+          [ "$rc" != 0 ] || { echo "malformed unit parsed clean"; exit 1; }
+          grep -Eq '\((ERROR|MISSING)' neg1.txt
+          echo "negative control 1 failed as required (rc=$rc)"
+      - name: Negative control 2, the coverage gate refuses an accepted file that does not parse
+        run: |
+          set -u
+          d="$RUNNER_TEMP/neg2"; mkdir -p "$d"
+          cp "$RUNNER_TEMP/omega-mv/examples/om2-tour.om" test/negative/malformed.om "$d/"
+          # An oracle that accepts every file: the malformed unit is now "accepted" and must fail the gate.
+          rc=0; sh scripts/coverage.sh "$d" /usr/bin/true > neg2.tsv || rc=$?
+          cat neg2.tsv
+          [ "$rc" = 1 ] || { echo "coverage gate passed a malformed accepted file: rc=$rc"; exit 1; }
+          grep -q '^COVERAGE omc-accepted 1/2 ' neg2.tsv
+          echo "negative control 2 failed as required (rc=$rc)"
+      - name: Keep the coverage table
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.tsv
+          if-no-files-found: ignore

@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "name": "tree-sitter-omega",
+  "purpose": "tree-sitter grammar for Omega (.om): grammar.js, generated parser and bindings, highlight and locals queries, corpus tests, and a coverage script that parses every *.om file in aien-dev/omega-mv at omega.ref with omc (born from the seed) as the accept/refuse oracle.",
+  "layer": "tooling",
+  "parent": "aien-dev/omega-mv@e5b32567a7aff3ce594e3254a622a846a6cd190b",
+  "invariants": [
+    "The language is defined by omega-mv (docs/one_layer/OMEGESE.md and the omc lexer in seed/omc/omc.om); when this grammar and omc disagree, omc is right and the grammar is the bug.",
+    "src/ is exactly what the pinned tree-sitter CLI (package.json, tree-sitter-cli.sha256) generates from grammar.js; CI fails on any drift.",
+    "Every file omc accepts at omega.ref must parse with zero ERROR and MISSING nodes; coverage numbers are quoted only from a CI run at a named omega-mv commit.",
+    "Every negative control must fail; a workflow where a control passes is broken, not green."
+  ]
+}

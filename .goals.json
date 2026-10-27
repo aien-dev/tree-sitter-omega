@@ -1,0 +1,30 @@
+{
+  "project_name": "tree-sitter-omega",
+  "goals": [
+    {
+      "id": "g1",
+      "title": "Parse every omc-accepted Omega file clean",
+      "description": "Every *.om file in aien-dev/omega-mv that omc accepts parses with zero ERROR/MISSING nodes, measured in CI at the commit in omega.ref.",
+      "status": "in_progress",
+      "milestones": [
+        {"id": "g1.m1", "description": "393/393 omc-accepted files clean at omega-mv e5b32567 (local run, 2026-10-27)", "completed": true},
+        {"id": "g1.m2", "description": "Same measurement green on a GitHub ubuntu-24.04-arm CI run", "completed": false},
+        {"id": "g1.m3", "description": "Follow omega-mv main: bump omega.ref and keep the gate green", "completed": false}
+      ],
+      "created_at": "2026-10-27T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "g2",
+      "title": "Editor reach",
+      "description": "Get the grammar into editors through each project's own acceptance rules: nvim-treesitter, Helix, Zed, and GitHub Linguist once its usage threshold is met.",
+      "status": "planned",
+      "milestones": [
+        {"id": "g2.m1", "description": "Rule check recorded with URLs for each registry", "completed": false},
+        {"id": "g2.m2", "description": "First registry submission accepted", "completed": false}
+      ],
+      "created_at": "2026-10-27T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    }
+  ]
+}

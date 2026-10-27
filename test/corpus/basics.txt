@@ -1,0 +1,258 @@
+================================================================================
+Note lines and a text program
+================================================================================
+
+note text bytes with every escape are written to stdout and read back with get and len
+text t "a\tb\\c\"d\ne"
+global g uchar 16
+fn main to int
+n = write int 1 t ulong 0 len t
+put g 0 get t 2
+ret add int get t 0 int add len t ulong get g 0
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (text_declaration
+    (identifier)
+    (string
+      (string_content)
+      (escape_sequence)
+      (string_content)
+      (escape_sequence)
+      (string_content)
+      (escape_sequence)
+      (string_content)
+      (escape_sequence)
+      (string_content)))
+  (global_declaration
+    (identifier)
+    (identifier)
+    (integer))
+  (function_definition
+    (identifier)
+    (return_type
+      (identifier))
+    (block
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (identifier)
+          (integer)
+          (identifier)
+          (identifier)
+          (integer)
+          (identifier)
+          (identifier)))
+      (put_statement
+        (expression
+          (identifier)
+          (integer)
+          (identifier)
+          (identifier)
+          (integer)))
+      (return_statement
+        (expression
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (integer)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (integer))))))
+
+================================================================================
+Assignment without = and a void call
+================================================================================
+
+fn gcd a uint b uint to uint
+while ne b 0 bound 100
+t rem a b
+a = b
+b = t
+end
+ret a
+end
+fn hello to void
+ret
+end
+fn main to int
+hello
+ret int gcd 12 18
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier)
+      (identifier)
+      (identifier)
+      (identifier))
+    (return_type
+      (identifier))
+    (block
+      (while_statement
+        (expression
+          (identifier)
+          (identifier)
+          (integer))
+        (integer)
+        (block
+          (expression_statement
+            (expression
+              (identifier)
+              (identifier)
+              (identifier)
+              (identifier)))
+          (assignment
+            (identifier)
+            (expression
+              (identifier)))
+          (assignment
+            (identifier)
+            (expression
+              (identifier)))))
+      (return_statement
+        (expression
+          (identifier)))))
+  (function_definition
+    (identifier)
+    (return_type
+      (identifier))
+    (block
+      (return_statement)))
+  (function_definition
+    (identifier)
+    (return_type
+      (identifier))
+    (block
+      (expression_statement
+        (expression
+          (identifier)))
+      (return_statement
+        (expression
+          (identifier)
+          (identifier)
+          (integer)
+          (integer))))))
+
+================================================================================
+If, else, for, break, continue, trap, exit
+================================================================================
+
+fn main to int
+s = ulong 0
+for i ulong 10
+if eq rem i 2 0
+continue
+else
+s = add s i
+end
+if gt s 20
+break
+end
+end
+if eq s 0
+trap 4
+end
+exit int s
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (identifier)
+    (return_type
+      (identifier))
+    (block
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (integer)))
+      (for_statement
+        (identifier)
+        (expression
+          (identifier)
+          (integer))
+        (block
+          (if_statement
+            (expression
+              (identifier)
+              (identifier)
+              (identifier)
+              (integer)
+              (integer))
+            (block
+              (continue_statement))
+            (else_clause
+              (block
+                (assignment
+                  (identifier)
+                  (expression
+                    (identifier)
+                    (identifier)
+                    (identifier))))))
+          (if_statement
+            (expression
+              (identifier)
+              (identifier)
+              (integer))
+            (block
+              (break_statement)))))
+      (if_statement
+        (expression
+          (identifier)
+          (identifier)
+          (integer))
+        (block
+          (trap_statement
+            (expression
+              (integer)))))
+      (exit_statement
+        (expression
+          (identifier)
+          (identifier))))))
+
+================================================================================
+A note line with no text and a word that starts with note
+================================================================================
+
+note
+fn main to int
+notes = int 1
+ret notes
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (function_definition
+    (identifier)
+    (return_type
+      (identifier))
+    (comment)
+    (block
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (integer)))
+      (return_statement
+        (comment)
+        (expression
+          (identifier))))))

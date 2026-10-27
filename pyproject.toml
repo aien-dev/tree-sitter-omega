@@ -1,0 +1,29 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [ "setuptools>=62.4.0", "wheel" ]
+
+[project]
+authors = [ { email = "drake@aienos.com", name = "Drake Stapleton" } ]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Compilers",
+  "Topic :: Text Processing :: Linguistic",
+  "Typing :: Typed",
+]
+description = "Omega (.om, Omegese) grammar for tree-sitter"
+keywords = [ "incremental", "parsing", "tree-sitter", "omega" ]
+license.text = "Apache-2.0 WITH LLVM-exception"
+name = "tree-sitter-omega"
+readme = "README.md"
+requires-python = ">=3.10"
+version = "0.1.0"
+
+[project.urls]
+Homepage = "https://github.com/aien-dev/tree-sitter-omega"
+
+[project.optional-dependencies]
+core = [ "tree-sitter~=0.24" ]
+
+[tool.cibuildwheel]
+build = "cp310-*"
+build-frontend = "build"

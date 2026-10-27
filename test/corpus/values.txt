@@ -1,0 +1,145 @@
+================================================================================
+Structs, constants, floats, grouping, sizeof
+================================================================================
+
+const K uint 5
+const PI f64 3.14159
+struct P x long y long buf uchar 3 end
+fn main to int
+p = new P 1 2 0
+h = f64 2.5e-3
+q = fsqrt (f64 2.0)
+z = sub ((int 7)) int 2
+n = sizeof P
+ret int add get p x offsetof P y
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (const_declaration
+    (identifier)
+    (identifier)
+    (integer))
+  (const_declaration
+    (identifier)
+    (identifier)
+    (float))
+  (struct_declaration
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (integer))
+  (function_definition
+    (identifier)
+    (return_type
+      (identifier))
+    (block
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (identifier)
+          (integer)
+          (integer)
+          (integer)))
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (float)))
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (parenthesized
+            (identifier)
+            (float))))
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (parenthesized
+            (parenthesized
+              (identifier)
+              (integer)))
+          (identifier)
+          (integer)))
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (identifier)))
+      (return_statement
+        (expression
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier))))))
+
+================================================================================
+OM-1 units keep OM-2 words as names
+================================================================================
+
+fn main to int
+open = int 1
+field = add open int 2
+ret field
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (identifier)
+    (return_type
+      (identifier))
+    (block
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (integer)))
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (identifier)
+          (identifier)
+          (integer)))
+      (return_statement
+        (expression
+          (identifier))))))
+
+================================================================================
+IR-mode header
+================================================================================
+
+ir
+fn f a uint to uint
+ret a
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (profile)
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier)
+      (identifier))
+    (return_type
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (identifier))))))

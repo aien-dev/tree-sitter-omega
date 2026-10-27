@@ -1,0 +1,36 @@
+note a highlight test; assertion lines are note lines
+note <- comment
+fn gcd a uint b uint to uint
+note <- keyword
+note ^ function
+note   ^ variable.parameter
+note     ^ type.builtin
+note                 ^ keyword
+while ne b 0 bound 100
+note <- keyword.repeat
+note  ^ keyword.operator
+note       ^ number
+note         ^ keyword.repeat
+t = rem a b
+note <- variable
+note ^ keyword.operator
+end
+ret a
+note <- keyword.return
+end
+fn main to int
+x = f64 2.5
+note    ^ number.float
+s = fsqrt ( x )
+note ^ keyword.operator
+note      ^ punctuation.bracket
+show x
+note <- function.call
+if eq s x
+note <- keyword.conditional
+ret 0
+else
+trap 4
+note <- keyword.return
+end
+end

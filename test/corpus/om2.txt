@@ -1,0 +1,237 @@
+================================================================================
+OM-2 profile, layout, abstract, holds, hex, unroll, unsized views
+================================================================================
+
+note OM-2 tour
+om2
+layout blk 8
+field lo uint at 0 little
+note fields may be separated by note lines
+field hi uint at 4 little
+end
+abstract v32 ulong
+holds v32 dup32
+fn v32mk x uint to v32
+ret seal v32 or shl ulong x 32 ulong x
+end
+fn seed s edit uint 8 fresh to uint
+for i uint 8 unroll
+put s i add i 0x9e3779b9
+end
+ret get s 7
+end
+fn fold a view uint * to uint
+ret get a 0
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (profile)
+  (layout_declaration
+    (identifier)
+    (integer)
+    (field_declaration
+      (identifier)
+      (identifier)
+      (identifier)
+      (integer)
+      (identifier))
+    (comment)
+    (field_declaration
+      (identifier)
+      (identifier)
+      (identifier)
+      (integer)
+      (identifier)))
+  (abstract_declaration
+    (identifier)
+    (identifier))
+  (holds_declaration
+    (identifier)
+    (identifier))
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier)
+      (identifier))
+    (return_type
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (integer)
+          (identifier)
+          (identifier)))))
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier)
+      (identifier)
+      (identifier)
+      (integer)
+      (identifier))
+    (return_type
+      (identifier))
+    (block
+      (for_statement
+        (identifier)
+        (expression
+          (identifier)
+          (integer)
+          (identifier))
+        (block
+          (put_statement
+            (expression
+              (identifier)
+              (identifier)
+              (identifier)
+              (identifier)
+              (integer)))))
+      (return_statement
+        (expression
+          (identifier)
+          (identifier)
+          (integer)))))
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier)
+      (identifier)
+      (identifier)
+      (unsized))
+    (return_type
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (identifier)
+          (identifier)
+          (integer))))))
+
+================================================================================
+Export, out parameters and diag options
+================================================================================
+
+om2 diag release
+export fn put32 o out uchar 4 v uint to void
+put o 0 uchar and v 255
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (profile
+    (identifier)
+    (identifier))
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier)
+      (identifier)
+      (identifier)
+      (integer)
+      (identifier)
+      (identifier))
+    (return_type
+      (identifier))
+    (block
+      (put_statement
+        (expression
+          (identifier)
+          (integer)
+          (identifier)
+          (identifier)
+          (identifier)
+          (integer))))))
+
+================================================================================
+Contracts
+================================================================================
+
+om2
+fn step x uint to uint
+requires lt x 10
+ensures eq result add x 1
+ret add x 1
+end
+fn main to int
+i = uint 0
+while lt i 3
+invariant le i 3
+i = step i
+end
+ret int sub i 3
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (profile)
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier)
+      (identifier))
+    (return_type
+      (identifier))
+    (block
+      (expression_statement
+        (expression
+          (identifier)
+          (identifier)
+          (identifier)
+          (integer)))
+      (expression_statement
+        (expression
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (integer)))
+      (return_statement
+        (expression
+          (identifier)
+          (identifier)
+          (integer)))))
+  (function_definition
+    (identifier)
+    (return_type
+      (identifier))
+    (block
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (integer)))
+      (while_statement
+        (expression
+          (identifier)
+          (identifier)
+          (integer))
+        (block
+          (expression_statement
+            (expression
+              (identifier)
+              (identifier)
+              (identifier)
+              (integer)))
+          (assignment
+            (identifier)
+            (expression
+              (identifier)
+              (identifier)))))
+      (return_statement
+        (expression
+          (identifier)
+          (identifier)
+          (identifier)
+          (integer))))))

@@ -1,0 +1,5 @@
+note negative control: this unit must parse with ERROR or MISSING nodes
+note (the group is never closed and the function has no end)
+fn main to int
+x = add (int 1 int 2
+ret x
