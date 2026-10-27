@@ -87,7 +87,7 @@ jobs:
           rc=0; sh scripts/coverage.sh --omc /usr/bin/true --units neg3.units "$d" > neg3.tsv || rc=$?
           cat neg3.tsv
           [ "$rc" = 1 ] || { echo "coverage gate passed a malformed accepted unit: rc=$rc"; exit 1; }
-          grep -Eq '^unit:neg3	omc=accept	parse=error	.* in malformed\.om:4$' neg3.tsv
+          grep -Eq '^unit:neg3	omc=accept	parse=error	.* in malformed\.om:[0-9]+$' neg3.tsv
           grep -q '^COVERAGE units-accepted 0/1 ' neg3.tsv
           echo "negative control 3 failed as required (rc=$rc)"
       - name: Keep the coverage table

@@ -145,7 +145,7 @@ without an ERROR node. This is a syntax tree for editors, not a checker; `omc` r
 - Negative control 2: the coverage gate, given an oracle that accepts everything, must fail on that
   malformed file.
 - Negative control 3: the same fake oracle and a unit that composes the malformed file with a valid
-  one must fail as `unit:... parse=error ... in malformed.om:4`.
+  one must fail as `unit:... parse=error ... in malformed.om:<line>`, naming the malformed member.
 
 ## Use it
 
