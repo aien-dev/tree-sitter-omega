@@ -1,0 +1,9 @@
+# Composed units of aien-dev/aienos.com (label aienos.com), copied from om/*/check.sh and
+# om/lab-page/record.sh (`cat A B... > unit`).
+unit allen-page aienos.com:om/allen-page/contract.om aienos.com:om/allen-page/allen.om aienos.com:om/allen-page/allen-js.om
+unit allen-panes aienos.com:om/allen-panes/contract.om aienos.com:om/allen-panes/panes.om
+unit allen-audio-asset aienos.com:om/allen-audio/chirp.om aienos.com:om/allen-audio/asset.om
+unit allen-audio-native aienos.com:om/allen-audio/chirp.om aienos.com:om/allen-audio/native.om
+unit aien-universe aienos.com:om/allen-page/contract.om aienos.com:om/aien-universe/universe.om
+unit hive-page aienos.com:om/hive-page/contract.om aienos.com:om/hive-page/freshness-js.om aienos.com:om/hive-page/hive.om aienos.com:om/hive-page/hive-js.om
+unit lab-page aienos.com:om/lab-page/axpy.om aienos.com:om/lab-page/harness.om

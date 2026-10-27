@@ -22,8 +22,8 @@ bytes by a POSIX shell script whose `printf` is the one outside tool; the chain 
 Linux; matching the published omc hash is a fixed-output reproducibility check along one build path,
 not diverse double compilation, and it does not prove omc correct.)
 
-MEASURED at omega-mv `e5b32567a7aff3ce594e3254a622a846a6cd190b` (local run on a DGX Spark, 2026-10-27,
-and the same numbers in CI on `ubuntu-24.04-arm`:
+MEASURED at omega-mv `e5b32567a7aff3ce594e3254a622a846a6cd190b` (local run on a DGX Spark, 2026-10-28,
+grammar of this commit; the file rows match CI on `ubuntu-24.04-arm` for the previous grammar,
 [run 40430760804](https://github.com/aien-dev/tree-sitter-omega/actions/runs/40430760804)):
 
 | files | count | parse with zero ERROR/MISSING nodes |
@@ -31,6 +31,7 @@ and the same numbers in CI on `ubuntu-24.04-arm`:
 | all `*.om` files | 811 | **789** |
 | files `omc` accepts on its own | 393 | **393** (the CI gate: this must stay 100%) |
 | files `omc` refuses | 418 | 396 parse clean, 22 show ERROR |
+| library units composed as their build scripts compose them ([`test/units/omega-mv.units`](test/units/omega-mv.units)) | 16, all accepted by `omc` | **16** (also a CI gate) |
 
 Read the third row carefully. Most refused files are not broken syntax: library units such as
 `om/tls/*.om` are compiled only after their build script prepends an `om2` line and concatenates them
@@ -57,19 +58,64 @@ sha256sum -c tree-sitter-cli.sha256       # the CLI binary install.js fetched (l
 git clone https://github.com/aien-dev/omega-mv /tmp/omega-mv
 git -C /tmp/omega-mv checkout --detach e5b32567a7aff3ce594e3254a622a846a6cd190b
 (cd /tmp/omega-mv && sh seed/omega-from-seed.sh)
-sh scripts/coverage.sh /tmp/omega-mv /tmp/omega-mv/seed/out/omc
+sh scripts/coverage.sh --omc /tmp/omega-mv/seed/out/omc --units test/units/omega-mv.units /tmp/omega-mv
 ```
 
-The script prints one tab-separated line per file (`path omc=accept|refuse parse=clean|error
-first-error-node`) and three `COVERAGE` lines, and exits 1 if any file `omc` accepts fails to parse
-clean. Without an `omc` argument it reports the `all` row and marks the oracle rows NOT_RUN. `omc` is a
-static AArch64 Linux program; on x86_64 the oracle needs qemu-user, and I have not measured that path.
+`scripts/coverage.sh [--omc OMC] [--units MANIFEST]... [LABEL=]DIR...` measures any list of
+directories (the label defaults to the directory's name). It prints one tab-separated line per file
+(`path omc=accept|refuse parse=clean|error first-error-node`), one `unit:NAME` line per composed unit
+(the first error is located as `in MEMBER:LINE`), and `COVERAGE` lines that end with every
+directory's commit. A manifest line `unit NAME MEMBER...` concatenates its members in order, as
+`cat` in a build script does; `each NAME LABEL:GLOB MEMBER...` makes one unit per matching file or
+directory; a member is `LABEL:PATH` or `@om2` / `@ir` for that profile line. The script exits 1 if
+any file or unit `omc` accepts fails to parse clean, and 2 on a usage error (an unknown label, a
+member that matches no file). Without `--omc` it reports the `all` row and marks the oracle rows
+NOT_RUN. `omc` is a static AArch64 Linux program; on x86_64 the oracle needs qemu-user, and I have not
+measured that path.
+
+### Every other public aien-dev repository with Omega in it
+
+MEASURED 2026-10-28 on a DGX Spark with the same `omc` (sha256 `2c824805…029f`), one
+`coverage.sh` run over omega-mv and the 25 other public aien-dev repositories that hold `*.om` files,
+with every manifest in [`test/units/`](test/units). "Before" is the previous grammar (`9b63612`) under
+the same script and manifests.
+
+| repository @ commit | `*.om` files | `omc` accepts | accepted files clean, before → after |
+|---|---:|---:|---:|
+| omega-rosetta @ `60dcf9b2` | 39 | 34 | 34 → **34** |
+| omega-bridge @ `358c5051` | 128 | 126 | 126 → **126** |
+| CUDApp @ `e7b9e1fc` | 116 | 34 | 34 → **34** |
+| sovereign-intelligence @ `d0f6939a` | 95 | 52 | 52 → **52** |
+| aienos.com @ `ee3833cf` | 29 | 14 | 13 → **14** |
+| aien-architecture-mv @ `df796a8a` | 13 | 12 | 12 → **12** |
+| omnet @ `83f605b1` | 47 | 9 | 9 → **9** |
+| babel @ `13ad42d9` (with `build/`, from its `build.sh`) | 10 | 2 | 1 → **2** |
+| AienOS-nv @ `240ee9af` | 9 | 2 | 2 → **2** |
+| omega-harness @ `82b89c28` | 2 | 2 | 2 → **2** |
+| omega-blas, omega-dnn, omega-gpu-bench, omega-kernel-template, omega-packages, omega-bridge-kit | 7 | 6 | 6 → **6** |
+| cortex, omtex, omega-gpu-driver, aien-sovereign-core-mv, synapse-{board,claims,map,mcp,pulse} | 75 | 0 | — |
+| **all, with omega-mv** | **1381** | **686** | 684 → **686** |
+| composed units in `test/units/` | 85 | 80 | 76 → **80** |
+
+Files `omc` refuses alone are mostly library units; the manifests compile them the way their
+repositories' build scripts do, and those 80 units cover 153 of them. The 5 refused units are the
+synapse tools, whose sources are marked work in progress (`omc` errors 9, 12 and 23 at their own
+omega-mv pin). Beyond the 22 fixtures above, two refused files show ERROR: synapse-map
+`src/40-xerj.om` line 134 (a stray `end`; its unit is refused with error 3) and aien-architecture-mv
+`tools/zero-legacy/fixtures/tree/src/sh.om` (a shell script fixture).
+
+The two defects these runs found are fixed in this grammar: the `note` comment was lexed inside text
+(`" note "`, `"x\nnote add three\nfn"`: a MISSING `"` in five files and four units), and a name that
+starts with `note` (`notes`, `noted`) was split into a comment and a name without any ERROR node
+(`omc` ends the `note` word at a blank, a parenthesis or the end). Both are cases in
+[`test/corpus/notes.txt`](test/corpus/notes.txt).
 
 ## What the grammar knows, and where it stops
 
 Omega is line oriented: one statement per line, words separated by blanks, `(` and `)` as words of
-their own, `note` starting a comment line. The grammar gives structure to everything that is context
-free:
+their own, `note` starting a comment line. As in `omc`, the comment word is exactly `note`, ended by a
+blank, a parenthesis or the end of the line (`notes` and `noted` are names), and a `note` inside text
+is text. The grammar gives structure to everything that is context free:
 
 - `fn ... to ...` / `export fn` definitions with parameter list and return type, closed by `end`
 - `if` / `else`, `while` (with an optional `bound`), `for`, `layout` with `field` lines, one-line `struct ... end`
@@ -88,12 +134,16 @@ without an ERROR node. This is a syntax tree for editors, not a checker; `omc` r
 
 ## Tests and CI
 
-- `tree-sitter test` runs [`test/corpus/`](test/corpus) (14 cases, 4 of them must produce ERROR) and the
+- `tree-sitter test` runs [`test/corpus/`](test/corpus) (16 cases, 4 of them must produce ERROR) and the
   highlight assertions in [`test/highlight/`](test/highlight) (22 assertions in 2 files).
 - CI regenerates `src/` with the pinned CLI and fails if it differs from the committed parser.
+- The coverage gate: every omega-mv file `omc` accepts, and the 16 units in
+  [`test/units/omega-mv.units`](test/units/omega-mv.units), must parse clean.
 - Negative control 1: [`test/negative/malformed.om`](test/negative/malformed.om) must parse with ERROR.
 - Negative control 2: the coverage gate, given an oracle that accepts everything, must fail on that
   malformed file.
+- Negative control 3: the same fake oracle and a unit that composes the malformed file with a valid
+  one must fail as `unit:... parse=error ... in malformed.om:4`.
 
 ## Use it
 

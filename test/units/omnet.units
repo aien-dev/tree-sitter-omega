@@ -1,0 +1,14 @@
+# Composed units of aien-dev/omnet (label omnet), copied from tools/build-tkad.sh and
+# om/*/test/run.sh (`cat LIBS... driver.om`).
+unit omnet-tkad omnet:om/quantity/quantity.om omnet:om/blake2s/blake2s.om omnet:om/sha512/sha512.om omnet:om/ed25519/ed25519.om omnet:om/blake2b/blake2b.om omnet:om/argon2/argon2.om omnet:om/argon2/argon2pool.om omnet:om/codec/codec.om omnet:om/cbor/cbor.om omnet:om/tka/tka.om omnet:om/tka/tkastate.om omnet:om/tka/tkapool.om omnet:om/tkasig/tkasig.om omnet:om/json/json.om omnet:om/store/store.om omnet:om/store/storepool.om omnet:cmd/tkad/state.om omnet:cmd/tkad/helpers.om omnet:cmd/tkad/rpc.om omnet:cmd/tkad/adapter.om omnet:cmd/tkad/socket.om omnet:cmd/tkad/main.om
+unit omnet-argon2-driver omnet:om/blake2b/blake2b.om omnet:om/argon2/argon2.om omnet:om/argon2/argon2pool.om omnet:om/argon2/test/driver.om
+unit omnet-argon2-trap omnet:om/blake2b/blake2b.om omnet:om/argon2/argon2.om omnet:om/argon2/argon2pool.om omnet:om/argon2/test/trap.om
+unit omnet-blake2b omnet:om/blake2b/blake2b.om omnet:om/blake2b/test/driver.om
+unit omnet-blake2s omnet:om/blake2s/blake2s.om omnet:om/blake2s/test/driver.om
+unit omnet-codec omnet:om/codec/codec.om omnet:om/codec/test/driver.om
+unit omnet-cbor omnet:om/blake2s/blake2s.om omnet:om/cbor/cbor.om omnet:om/cbor/test/driver.om
+unit omnet-ed25519 omnet:om/sha512/sha512.om omnet:om/ed25519/ed25519.om omnet:om/ed25519/test/driver.om
+unit omnet-sha512-driver omnet:om/sha512/sha512.om omnet:om/sha512/test/driver.om
+unit omnet-sha512-trap omnet:om/sha512/sha512.om omnet:om/sha512/test/trap.om
+unit omnet-tka-driver omnet:om/blake2s/blake2s.om omnet:om/sha512/sha512.om omnet:om/ed25519/ed25519.om omnet:om/cbor/cbor.om omnet:om/tka/tka.om omnet:om/tka/tkastate.om omnet:om/tka/tkapool.om omnet:om/tka/test/driver.om
+unit omnet-tka-revocation omnet:om/blake2s/blake2s.om omnet:om/sha512/sha512.om omnet:om/ed25519/ed25519.om omnet:om/cbor/cbor.om omnet:om/tka/tka.om omnet:om/tka/tkastate.om omnet:om/tka/tkapool.om omnet:om/tkasig/tkasig.om omnet:om/tka/test/revocation.om

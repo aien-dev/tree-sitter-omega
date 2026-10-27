@@ -1,0 +1,59 @@
+================================================================================
+The word note inside text is text, not a note
+================================================================================
+
+text a " note "
+text b "x\nnote add three\nfn"
+text c "note"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (text_declaration
+    (identifier)
+    (string
+      (string_content)))
+  (text_declaration
+    (identifier)
+    (string
+      (string_content)
+      (escape_sequence)
+      (string_content)
+      (escape_sequence)
+      (string_content)))
+  (text_declaration
+    (identifier)
+    (string
+      (string_content))))
+
+================================================================================
+A bare note line inside a block, a note with a parenthesis, and names that start with note
+================================================================================
+
+fn main to int
+  note
+note(x) y
+noted = int 2
+ret noted
+end
+note
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (identifier)
+    (return_type
+      (identifier))
+    (comment)
+    (comment)
+    (block
+      (assignment
+        (identifier)
+        (expression
+          (identifier)
+          (integer)))
+      (return_statement
+        (expression
+          (identifier)))))
+  (comment))

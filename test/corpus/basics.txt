@@ -245,7 +245,6 @@ end
     (identifier)
     (return_type
       (identifier))
-    (comment)
     (block
       (assignment
         (identifier)
@@ -253,6 +252,5 @@ end
           (identifier)
           (integer)))
       (return_statement
-        (comment)
         (expression
           (identifier))))))

@@ -178,13 +178,20 @@ export default grammar({
         ),
       ),
 
-    // Escapes: \n \t \\ \" (others are compile error 22, still one word to the lexer).
+    // Escapes: \n \t \\ \" (others are compile error 22, still one word to the lexer). Inside text
+    // the comment extra must never win: `" note "` and `"\nnote ..."` are text (omc tok_text reads to
+    // the closing quote), so string_content outranks comment (prec 2 > 1) and also covers the blanks
+    // that would otherwise be skipped as extras.
     string: ($) =>
       seq('"', repeat(choice($.string_content, $.escape_sequence)), token.immediate('"')),
-    string_content: (_) => token.immediate(prec(1, /[^"\\\n]+/)),
+    string_content: (_) => token.immediate(prec(2, /[^"\\\n]+/)),
     escape_sequence: (_) => token.immediate(/\\[^\n]/),
 
-    // `note ...` is a line the compiler does not read beyond its first word (OMEGESE.md 9.5).
-    comment: (_) => token(prec(1, choice('note', /note[ \t][^\n]*/))),
+    // `note ...` is a line the compiler does not read beyond its first word (OMEGESE.md 9.5; omc
+    // reads it only where a line starts, after blanks). The word is exactly `note`: omc isnote ends
+    // it at a blank, a parenthesis or the end, so `notes` and `noted` are names. A bare `note` is a
+    // keyword (lexed as an identifier, then matched whole against the keywords), and the longer
+    // `note text` / `note(...)` token outmatches the identifier `note`.
+    comment: (_) => choice('note', token(/note[ \t\r()][^\n]*/)),
   },
 });

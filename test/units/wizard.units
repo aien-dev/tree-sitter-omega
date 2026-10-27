@@ -1,0 +1,14 @@
+# The AienOS installer wizard, built by .github/workflows/verify.yml in both aien-dev/AienOS-nv and
+# aien-dev/sovereign-intelligence: (cd installer/wizard && cat sha256.om lib.om hole.om doctor.om
+# net.om steps.om engine.om main.om). Labels AienOS-nv and sovereign-intelligence.
+unit AienOS-nv-wizard AienOS-nv:installer/wizard/sha256.om AienOS-nv:installer/wizard/lib.om AienOS-nv:installer/wizard/hole.om AienOS-nv:installer/wizard/doctor.om AienOS-nv:installer/wizard/net.om AienOS-nv:installer/wizard/steps.om AienOS-nv:installer/wizard/engine.om AienOS-nv:installer/wizard/main.om
+unit sovereign-intelligence-wizard sovereign-intelligence:installer/wizard/sha256.om sovereign-intelligence:installer/wizard/lib.om sovereign-intelligence:installer/wizard/hole.om sovereign-intelligence:installer/wizard/doctor.om sovereign-intelligence:installer/wizard/net.om sovereign-intelligence:installer/wizard/steps.om sovereign-intelligence:installer/wizard/engine.om sovereign-intelligence:installer/wizard/main.om
+# docs/learn/teach/examples/stack-*/run.sh: cat lib.om PROGRAM.om; omega-06-ir-and-wasm/run.sh step 1
+unit si-stack-01 sovereign-intelligence:docs/learn/teach/examples/stack-01-why-sovereign/lib.om sovereign-intelligence:docs/learn/teach/examples/stack-01-why-sovereign/elfinfo.om
+unit si-stack-02 sovereign-intelligence:docs/learn/teach/examples/stack-02-evidence-levels/lib.om sovereign-intelligence:docs/learn/teach/examples/stack-02-evidence-levels/gatesum.om
+unit si-stack-03 sovereign-intelligence:docs/learn/teach/examples/stack-03-receipts/lib.om sovereign-intelligence:docs/learn/teach/examples/stack-03-receipts/rcptchk.om
+unit si-stack-05 sovereign-intelligence:docs/learn/teach/examples/stack-05-crumbs/lib.om sovereign-intelligence:docs/learn/teach/examples/stack-05-crumbs/crumbchk.om
+unit si-stack-06 sovereign-intelligence:docs/learn/teach/examples/stack-06-honest-status/lib.om sovereign-intelligence:docs/learn/teach/examples/stack-06-honest-status/overclaim.om
+unit si-stack-07 sovereign-intelligence:docs/learn/teach/examples/stack-07-signed-releases/lib.om sovereign-intelligence:docs/learn/teach/examples/stack-07-signed-releases/pemkey.om
+unit si-stack-08 sovereign-intelligence:docs/learn/teach/examples/stack-08-alpha-tags/lib.om sovereign-intelligence:docs/learn/teach/examples/stack-08-alpha-tags/alphachk.om
+unit si-omega-06-native sovereign-intelligence:docs/learn/teach/examples/omega-06-ir-and-wasm/fns.om sovereign-intelligence:docs/learn/teach/examples/omega-06-ir-and-wasm/putnum.om sovereign-intelligence:docs/learn/teach/examples/omega-06-ir-and-wasm/main.om

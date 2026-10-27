@@ -1,0 +1,16 @@
+# Composed units of aien-dev/cortex (label cortex), copied from build.sh (SERVER and IMPORT module
+# orders, `echo om2` first) and tests/{json,fts,parity,conc,import}/run.sh.
+unit cortex-server @om2 cortex:om/f64.om cortex:om/uni_rust.om cortex:om/json.om cortex:om/crc32c.om cortex:om/uni_fts.om cortex:om/flog.om cortex:om/fts.om cortex:om/like.om cortex:om/http.om cortex:om/store.om cortex:om/log.om cortex:om/api.om cortex:om/api2.om cortex:om/api3.om cortex:om/qs.om cortex:om/enc.om cortex:om/de.om cortex:om/srv.om cortex:om/main.om
+unit cortex-import @om2 cortex:om/crc32c.om cortex:om/sqlite.om cortex:om/import_main.om
+each cortex-json-%n cortex:tests/json/t_[!ip]*.om @om2 cortex:om/f64.om cortex:om/uni_rust.om cortex:om/json.om cortex:tests/json/t_io.om %
+unit cortex-json-t_perf @om2 cortex:om/f64.om cortex:om/uni_rust.om cortex:om/json.om cortex:tests/json/t_perf.om
+unit cortex-fts-t_flog cortex:om/uni_fts.om cortex:om/flog.om cortex:om/fts.om cortex:om/like.om cortex:tests/fts/tlib.om cortex:tests/fts/tdump.om cortex:tests/fts/t_flog.om
+unit cortex-fts-t_tok cortex:om/uni_fts.om cortex:om/flog.om cortex:om/fts.om cortex:om/like.om cortex:tests/fts/tlib.om cortex:tests/fts/tdump.om cortex:tests/fts/t_tok.om
+unit cortex-fts-t_query cortex:om/uni_fts.om cortex:om/flog.om cortex:om/fts.om cortex:om/like.om cortex:tests/fts/tlib.om cortex:tests/fts/tdump.om cortex:tests/fts/t_query.om
+unit cortex-fts-t_like cortex:om/uni_fts.om cortex:om/flog.om cortex:om/fts.om cortex:om/like.om cortex:tests/fts/tlib.om cortex:tests/fts/tdump.om cortex:tests/fts/t_like.om
+unit cortex-parity-gen @om2 cortex:tests/parity/gen.om
+unit cortex-parity-pdrive @om2 cortex:tests/parity/pdrive.om
+unit cortex-parity-pcmp @om2 cortex:tests/parity/pcmp.om
+unit cortex-conc-slow @om2 cortex:tests/conc/slow.om
+unit cortex-import-logdump @om2 cortex:om/crc32c.om cortex:tests/import/logdump.om
+unit cortex-import-crctest @om2 cortex:om/crc32c.om cortex:tests/import/crctest.om
