@@ -82,7 +82,7 @@ the same script and manifests.
 
 | repository @ commit | `*.om` files | `omc` accepts | accepted files clean, before → after |
 |---|---:|---:|---:|
-| omega-rosetta @ `60dcf9b2` | 39 | 34 | 34 → **34** |
+| omega-rosetta @ `a5b7330a` (branch `corpus/200`: 216 tasks; 47 exercises with stub, `test.om`, `.meta/example.om`) | 357 | 296 | 296 → **296**; all 357 clean |
 | omega-bridge @ `358c5051` | 128 | 126 | 126 → **126** |
 | CUDApp @ `e7b9e1fc` | 116 | 34 | 34 → **34** |
 | sovereign-intelligence @ `d0f6939a` | 95 | 52 | 52 → **52** |
@@ -94,18 +94,20 @@ the same script and manifests.
 | omega-harness @ `82b89c28` | 2 | 2 | 2 → **2** |
 | omega-blas, omega-dnn, omega-gpu-bench, omega-kernel-template, omega-packages, omega-bridge-kit | 7 | 6 | 6 → **6** |
 | cortex, omtex, omega-gpu-driver, aien-sovereign-core-mv, synapse-{board,claims,map,mcp,pulse} | 75 | 0 | — |
-| **all, with omega-mv** | **1381** | **686** | 684 → **686** |
-| composed units in `test/units/` | 85 | 80 | 76 → **80** |
+| **all, with omega-mv** | **1699** | **948** | 946 → **948** |
+| composed units in `test/units/` (94 of them omega-rosetta exercises: stub + test, example + test) | 169 | 164 | 160 → **164** |
 
-Files `omc` refuses alone are mostly library units; the manifests compile them the way their
-repositories' build scripts do, and those 80 units cover 153 of them. The 5 refused units are the
-synapse tools, whose sources are marked work in progress (`omc` errors 9, 12 and 23 at their own
-omega-mv pin). Beyond the 22 fixtures above, two refused files show ERROR: synapse-map
+On omega-rosetta `main` (`60dcf9b2`, 39 files, 34 accepted) the result was the same: 34 → 34.
+
+Files `omc` refuses alone are mostly library units and exercise parts; the manifests compile them the
+way their repositories' build scripts do, and those 164 units cover 209 of them. The 5 refused units
+are the synapse tools, whose sources are marked work in progress (`omc` errors 3, 9, 12 and 23 at
+omega-mv `e5b32567`). Beyond the 22 fixtures above, two refused files show ERROR: synapse-map
 `src/40-xerj.om` line 134 (a stray `end`; its unit is refused with error 3) and aien-architecture-mv
 `tools/zero-legacy/fixtures/tree/src/sh.om` (a shell script fixture).
 
 The two defects these runs found are fixed in this grammar: the `note` comment was lexed inside text
-(`" note "`, `"x\nnote add three\nfn"`: a MISSING `"` in five files and four units), and a name that
+(`" note "`, `"x\nnote add three\nfn"`: a MISSING `"` in seven files and four units), and a name that
 starts with `note` (`notes`, `noted`) was split into a comment and a name without any ERROR node
 (`omc` ends the `note` word at a blank, a parenthesis or the end). Both are cases in
 [`test/corpus/notes.txt`](test/corpus/notes.txt).
