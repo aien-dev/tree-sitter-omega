@@ -1,13 +1,27 @@
 {
-  "schema_version": "1.0.0",
-  "name": "tree-sitter-omega",
-  "purpose": "tree-sitter grammar for Omega (.om): grammar.js, generated parser and bindings, highlight and locals queries, corpus tests, and a coverage script that parses every *.om file in aien-dev/omega-mv at omega.ref with omc (born from the seed) as the accept/refuse oracle.",
-  "layer": "tooling",
-  "parent": "aien-dev/omega-mv@e5b32567a7aff3ce594e3254a622a846a6cd190b",
+  "extensions": {
+    "generated": {
+      "children": [],
+      "children_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compiled_at": "2026-10-28T21:30:38Z",
+      "compiler": "crumb-compile/1",
+      "digest": "sha256:e2b9cc1e15016103912ebdae668b8b1237a68d7adf872023b9e2a4e0edef34e7",
+      "evidence_files": 0,
+      "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "files": 55,
+      "generated_at_commit": "9b63612aa91cf9309a8194ce4b3286493f250142",
+      "source_tree": "sha256:622c73909a22865603b34f8850c62dca890a1d41741ed2956a1f2f1da66fb63a"
+    }
+  },
   "invariants": [
     "The language is defined by omega-mv (docs/one_layer/OMEGESE.md and the omc lexer in seed/omc/omc.om); when this grammar and omc disagree, omc is right and the grammar is the bug.",
     "src/ is exactly what the pinned tree-sitter CLI (package.json, tree-sitter-cli.sha256) generates from grammar.js; CI fails on any drift.",
     "Every file omc accepts at omega.ref must parse with zero ERROR and MISSING nodes; coverage numbers are quoted only from a CI run at a named omega-mv commit.",
     "Every negative control must fail; a workflow where a control passes is broken, not green."
-  ]
+  ],
+  "layer": "tooling",
+  "name": "tree-sitter-omega",
+  "parent": "aien-dev/omega-mv@e5b32567a7aff3ce594e3254a622a846a6cd190b",
+  "purpose": "tree-sitter grammar for Omega (.om): grammar.js, generated parser and bindings, highlight and locals queries, corpus tests, and a coverage script that parses every *.om file in aien-dev/omega-mv at omega.ref with omc (born from the seed) as the accept/refuse oracle.",
+  "schema_version": "1.0.0"
 }
