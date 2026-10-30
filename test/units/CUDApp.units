@@ -1,0 +1,6 @@
+# Composed units of aien-dev/CUDApp (label CUDApp) built by plain concatenation; other CUDApp units are
+# composed by scripts that rewrite their members first (awk shims, Python), so they are not listed.
+# tests/gsp/run-fwimage-host.sh: cat native/gsp/fwimage.om <omega-mv>/om/tls/sha2.om
+unit cudapp-fwimage CUDApp:native/gsp/fwimage.om omega-mv:om/tls/sha2.om
+# tests/device-trace/run-emitter-checks.sh: cat native/blackwell/trace-emit.om tests/device-trace/emitter-test.om
+unit cudapp-trace-emit CUDApp:native/blackwell/trace-emit.om CUDApp:tests/device-trace/emitter-test.om

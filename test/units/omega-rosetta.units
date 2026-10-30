@@ -1,0 +1,6 @@
+# Composed units of aien-dev/omega-rosetta (label omega-rosetta): exercise.sh joins a solution and
+# the exercise's test.om (`cat "$sol" "$dir/test.om"`), with the stub (exercises/<name>/<name>.om)
+# for a learner and .meta/example.om in CI.
+# scripts/coverage.sh --omc OMC --units test/units/omega-rosetta.units omega-rosetta=DIR
+each %n-example omega-rosetta:exercises/* %/.meta/example.om %/test.om
+each %n-stub omega-rosetta:exercises/* %/%n.om %/test.om

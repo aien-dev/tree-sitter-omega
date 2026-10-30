@@ -1,8 +1,9 @@
 name: grammar
 # Regenerates the parser with the pinned tree-sitter CLI and checks it matches the committed src/,
 # runs the corpus and highlight tests, then measures parse coverage over every *.om file in
-# aien-dev/omega-mv at the commit in omega.ref, with omc born from the 408-byte seed as the oracle
-# for which files the real compiler accepts. Two negative controls must fail.
+# aien-dev/omega-mv at the commit in omega.ref and over the library units omega-mv composes
+# (test/units/omega-mv.units), with omc born from the 408-byte seed as the oracle for which files
+# and units the real compiler accepts. Three negative controls must fail.
 on:
   push:
     branches: [main]
@@ -48,14 +49,16 @@ jobs:
           cd "$RUNNER_TEMP/omega-build"
           sh seed/omega-from-seed.sh > "$RUNNER_TEMP/seed.log" 2>&1 || { tail -40 "$RUNNER_TEMP/seed.log"; exit 1; }
           sha256sum seed/out/omc
-      - name: Corpus coverage (every omc-accepted file must parse clean)
+      - name: Corpus coverage (every omc-accepted file and unit must parse clean)
         run: |
           set -u
           rc=0
-          sh scripts/coverage.sh "$RUNNER_TEMP/omega-mv" "$RUNNER_TEMP/omega-build/seed/out/omc" > coverage.tsv || rc=$?
+          sh scripts/coverage.sh --omc "$RUNNER_TEMP/omega-build/seed/out/omc" --units test/units/omega-mv.units \
+            "$RUNNER_TEMP/omega-mv" > coverage.tsv || rc=$?
           grep '^COVERAGE' coverage.tsv
           { echo '```'; grep '^COVERAGE' coverage.tsv; echo; grep 'parse=error' coverage.tsv; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           [ "$rc" = 0 ] || { echo "coverage.sh exited $rc"; grep 'omc=accept.*parse=error' coverage.tsv; exit 1; }
+          grep -q '^COVERAGE units-accepted 16/16 ' coverage.tsv || { echo "omega-mv units not all accepted"; grep '^unit:' coverage.tsv; exit 1; }
       - name: Negative control 1, a malformed unit parses with ERROR (must FAIL to parse)
         run: |
           set -u
@@ -70,11 +73,23 @@ jobs:
           d="$RUNNER_TEMP/neg2"; mkdir -p "$d"
           cp "$RUNNER_TEMP/omega-mv/examples/om2-tour.om" test/negative/malformed.om "$d/"
           # An oracle that accepts every file: the malformed unit is now "accepted" and must fail the gate.
-          rc=0; sh scripts/coverage.sh "$d" /usr/bin/true > neg2.tsv || rc=$?
+          rc=0; sh scripts/coverage.sh --omc /usr/bin/true "$d" > neg2.tsv || rc=$?
           cat neg2.tsv
           [ "$rc" = 1 ] || { echo "coverage gate passed a malformed accepted file: rc=$rc"; exit 1; }
           grep -q '^COVERAGE omc-accepted 1/2 ' neg2.tsv
           echo "negative control 2 failed as required (rc=$rc)"
+      - name: Negative control 3, the units gate refuses a composed unit and names the member at fault
+        run: |
+          set -u
+          d="$RUNNER_TEMP/neg3"; mkdir -p "$d"
+          cp "$RUNNER_TEMP/omega-mv/examples/om2-tour.om" test/negative/malformed.om "$d/"
+          echo 'unit neg3 neg3:om2-tour.om neg3:malformed.om' > neg3.units
+          rc=0; sh scripts/coverage.sh --omc /usr/bin/true --units neg3.units "$d" > neg3.tsv || rc=$?
+          cat neg3.tsv
+          [ "$rc" = 1 ] || { echo "coverage gate passed a malformed accepted unit: rc=$rc"; exit 1; }
+          grep -Eq '^unit:neg3	omc=accept	parse=error	.* in malformed\.om:[0-9]+$' neg3.tsv
+          grep -q '^COVERAGE units-accepted 0/1 ' neg3.tsv
+          echo "negative control 3 failed as required (rc=$rc)"
       - name: Keep the coverage table
         if: always()
         uses: actions/upload-artifact@v4

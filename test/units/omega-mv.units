@@ -1,0 +1,28 @@
+# Composed units of aien-dev/omega-mv (label omega-mv), copied from the scripts that build them.
+# Library units hold no `fn main` and are compiled only inside such a unit, never alone.
+# scripts/coverage.sh --omc OMC --units test/units/omega-mv.units omega-mv=DIR
+
+# om/tls/build.sh: om2, sha2 hkdf x25519 chacha aesgcm ec rsa x509 tls, then the program
+# (om/tls/test/tls/run.sh builds kat.om, dnsunit.om and client.om this way)
+unit tls-kat @om2 omega-mv:om/tls/sha2.om omega-mv:om/tls/hkdf.om omega-mv:om/tls/x25519.om omega-mv:om/tls/chacha.om omega-mv:om/tls/aesgcm.om omega-mv:om/tls/ec.om omega-mv:om/tls/rsa.om omega-mv:om/tls/x509.om omega-mv:om/tls/tls.om omega-mv:om/tls/test/tls/kat.om
+unit tls-dns @om2 omega-mv:om/tls/sha2.om omega-mv:om/tls/hkdf.om omega-mv:om/tls/x25519.om omega-mv:om/tls/chacha.om omega-mv:om/tls/aesgcm.om omega-mv:om/tls/ec.om omega-mv:om/tls/rsa.om omega-mv:om/tls/x509.om omega-mv:om/tls/tls.om omega-mv:om/tls/test/tls/dnsunit.om
+unit tls-client @om2 omega-mv:om/tls/sha2.om omega-mv:om/tls/hkdf.om omega-mv:om/tls/x25519.om omega-mv:om/tls/chacha.om omega-mv:om/tls/aesgcm.om omega-mv:om/tls/ec.om omega-mv:om/tls/rsa.om omega-mv:om/tls/x509.om omega-mv:om/tls/tls.om omega-mv:om/tls/test/tls/client.om
+
+# om/tls/test/<unit>/run.sh build lines
+unit tls-sha2 @om2 omega-mv:om/tls/sha2.om omega-mv:om/tls/hkdf.om omega-mv:om/tls/test/sha2/driver.om
+unit tls-chacha @om2 omega-mv:om/tls/chacha.om omega-mv:om/tls/test/chacha/driver.om
+unit tls-chacha-bench @om2 omega-mv:om/tls/chacha.om omega-mv:om/tls/test/chacha/bench.om
+unit tls-aesgcm @om2 omega-mv:om/tls/aesgcm.om omega-mv:om/tls/test/aesgcm/driver.om
+unit tls-x25519 @om2 omega-mv:om/tls/x25519.om omega-mv:om/tls/test/x25519/driver.om
+unit tls-ec @om2 omega-mv:om/tls/sha2.om omega-mv:om/tls/ec.om omega-mv:om/tls/test/ec/driver.om
+unit tls-rsa @om2 omega-mv:om/tls/sha2.om omega-mv:om/tls/rsa.om omega-mv:om/tls/test/rsa/driver.om
+unit tls-x509 @om2 omega-mv:om/tls/sha2.om omega-mv:om/tls/hkdf.om omega-mv:om/tls/ec.om omega-mv:om/tls/rsa.om omega-mv:om/tls/x509.om omega-mv:om/tls/test/x509/driver.om
+
+# seed/json/tests/gate-json.sh compose: om2, json jsonw jsonf, the driver
+unit json-driver @om2 omega-mv:seed/json/json.om omega-mv:seed/json/jsonw.om omega-mv:seed/json/jsonf.om omega-mv:seed/json/tests/jsdrv.om
+
+# seed/net/tests/check.py compile_unit: om2, http.om, the unit
+unit http-parse @om2 omega-mv:seed/net/http.om omega-mv:seed/net/tests/parse.om
+unit http-live @om2 omega-mv:seed/net/http.om omega-mv:seed/net/tests/live.om
+unit http-sse-server @om2 omega-mv:seed/net/http.om omega-mv:seed/net/examples/sse_server.om
+unit http-sse-client @om2 omega-mv:seed/net/http.om omega-mv:seed/net/examples/sse_client.om

@@ -127,6 +127,12 @@
     }
   },
   {
+    "type": "comment",
+    "named": true,
+    "extra": true,
+    "fields": {}
+  },
+  {
     "type": "const_declaration",
     "named": true,
     "fields": {
@@ -971,11 +977,6 @@
     "named": true
   },
   {
-    "type": "comment",
-    "named": true,
-    "extra": true
-  },
-  {
     "type": "const",
     "named": false
   },
@@ -1045,6 +1046,10 @@
   },
   {
     "type": "layout",
+    "named": false
+  },
+  {
+    "type": "note",
     "named": false
   },
   {

@@ -1,0 +1,14 @@
+# Composed units of the aien-dev synapse-* tools and omtex, copied from each build script. Members
+# from aien-dev/omega-mv use label omega-mv (measured at the omega-mv pin of this grammar's README;
+# the tools pin their own omega-mv commit, all with the same omc sha256 2c824805...029f).
+# synapse-board/build.sh, synapse-claims/build.sh, synapse-map/build.sh, synapse-mcp/build.sh,
+# synapse-pulse/build.sh: { printf 'om2\n'; cat LIBS "$here"/src/*.om; }
+unit synapse-board @om2 omega-mv:seed/json/json.om omega-mv:seed/net/http.om synapse-board:src/*.om
+unit synapse-claims @om2 omega-mv:om/tls/sha2.om synapse-claims:src/*.om
+unit synapse-map @om2 omega-mv:seed/json/json.om omega-mv:seed/json/jsonw.om omega-mv:seed/net/http.om synapse-map:src/*.om
+unit synapse-mcp @om2 omega-mv:seed/json/json.om synapse-mcp:src/*.om
+unit synapse-pulse @om2 omega-mv:seed/json/json.om synapse-pulse:src/*.om
+# omtex/tools/build.sh PAPER.om: cat lib/omtex.om PAPER.om
+each omtex-%n omtex:examples/* omtex:lib/omtex.om %/*.om
+# aien-sovereign-core-mv/om/effects/run.sh: cat om/vendor/sha256.om om/effects/world.om
+unit core-effects-world aien-sovereign-core-mv:om/vendor/sha256.om aien-sovereign-core-mv:om/effects/world.om

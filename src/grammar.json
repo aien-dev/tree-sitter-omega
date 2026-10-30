@@ -1006,7 +1006,7 @@
       "type": "IMMEDIATE_TOKEN",
       "content": {
         "type": "PREC",
-        "value": 1,
+        "value": 2,
         "content": {
           "type": "PATTERN",
           "value": "[^\"\\\\\\n]+"
@@ -1021,24 +1021,20 @@
       }
     },
     "comment": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 1,
-        "content": {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "note"
-            },
-            {
-              "type": "PATTERN",
-              "value": "note[ \\t][^\\n]*"
-            }
-          ]
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "note"
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "note[ \\t\\r()][^\\n]*"
+          }
         }
-      }
+      ]
     }
   },
   "extras": [
